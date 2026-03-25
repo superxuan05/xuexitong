@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: xuexitong-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: xuexitong
+      MYSQL_USER: xuexitong
+      MYSQL_PASSWORD: 123456
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - xuexitong-network
+
+  # 可选：phpMyAdmin 管理工具
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: xuexitong-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 123456
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - xuexitong-network
+
+volumes:
+  mysql_data:
+
+networks:
+  xuexitong-network:
+    driver: bridge

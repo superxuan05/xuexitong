@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "xuexitong-backend",
+  "builds": [
+    {
+      "src": "server/api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/api/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

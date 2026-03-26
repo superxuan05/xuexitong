@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: xuexitong-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: xuexitong-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: xuexitong-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: xuexitong-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: xuexitong-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: xuexitong-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: "*"
+
+databases:
+  - name: xuexitong-db
+    plan: free
+    databaseName: xuexitong
+    user: xuexitong

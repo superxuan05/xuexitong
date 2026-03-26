@@ -11,7 +11,11 @@ const dbConfig = {
     connectionLimit: 10,
     queueLimit: 0,
     enableKeepAlive: true,
-    keepAliveInitialDelay: 0
+    keepAliveInitialDelay: 0,
+    // Render 需要 SSL
+    ssl: process.env.DB_SSL === 'true' ? {
+        rejectUnauthorized: false
+    } : undefined
 };
 
 // 创建连接池
@@ -25,7 +29,9 @@ const testConnection = async () => {
         connection.release();
     } catch (error) {
         console.error('❌ 数据库连接失败:', error.message);
-        process.exit(1);
+        // 不退出进程，让应用继续尝试
+        console.log('将在 5 秒后重试...');
+        setTimeout(testConnection, 5000);
     }
 };
 
@@ -65,6 +71,6 @@ module.exports = {
     pool,
     query,
     transaction,
-    testConnection,
-    getConnection
+    getConnection,
+    testConnection
 };

@@ -73,14 +73,14 @@ const openCaptcha = () => {
 const startDrag = (e: MouseEvent | TouchEvent) => {
   if (captchaVerified.value) return
   isDragging.value = true
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientX = 'touches' in e ? (e.touches[0]?.clientX ?? 0) : e.clientX
   startX.value = clientX
   startSliderPos.value = puzzleX.value
 }
 
 const onDrag = (e: MouseEvent | TouchEvent) => {
   if (!isDragging.value || captchaVerified.value) return
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientX = 'touches' in e ? (e.touches[0]?.clientX ?? 0) : e.clientX
   const diff = clientX - startX.value
   const maxPuzzleX = 220
   // 直接映射：滑块移动多少，拼图就移动多少（1:1比例）

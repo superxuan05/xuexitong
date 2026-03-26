@@ -186,12 +186,12 @@ const fetchTodayCourses = async () => {
 }
 
 // 根据时间判断课程状态
-const getCourseStatus = (startTime: string, endTime: string) => {
+const getCourseStatus = (startTime: string | undefined, endTime: string | undefined) => {
   const now = new Date()
   const currentTime = now.getHours() * 60 + now.getMinutes()
 
-  const start = startTime ? parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]) : 480
-  const end = endTime ? parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]) : 580
+  const start = startTime ? parseInt(startTime.split(':')[0]!) * 60 + parseInt(startTime.split(':')[1]!) : 480
+  const end = endTime ? parseInt(endTime.split(':')[0]!) * 60 + parseInt(endTime.split(':')[1]!) : 580
 
   if (currentTime < start) return 'upcoming'
   if (currentTime > end) return 'completed'
@@ -221,11 +221,10 @@ onMounted(() => {
   fetchTodayCourses()
 
   // 连接WebSocket
-  const user = getCurrentUser()
-  if (user) {
-    wsClient.connect(user.id, 'student')
-    wsClient.onMessage(handleWebSocketMessage)
-  }
+  wsClient.connect()
+  wsClient.on('check_in_started', handleWebSocketMessage)
+  wsClient.on('check_in_ended', handleWebSocketMessage)
+  wsClient.on('new_course', handleWebSocketMessage)
 })
 
 onUnmounted(() => {

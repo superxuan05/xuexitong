@@ -40,7 +40,7 @@ export const addAccount = (accountData: Omit<Account, 'id' | 'lastLogin'>): Acco
   
   const newAccount: Account = {
     ...accountData,
-    id: existingIndex >= 0 ? accounts[existingIndex].id : Date.now().toString(),
+    id: existingIndex >= 0 ? accounts[existingIndex]!.id : Date.now().toString(),
     lastLogin: new Date().toISOString()
   }
   
